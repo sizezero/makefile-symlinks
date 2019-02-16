@@ -3,30 +3,32 @@
 # der represents derived datasets
 # s- represents symlinks of various derived and imported datasets
 
-all : der1a der1b der2a der2b
+all : f-a3 f-b3
 
 init : clean
-	touch imp1 imp2
-	ln -s -f s-der1a der1a
-	ln -s -f s-der2a der2a
+	ln -s -f f-b2 s-b2
 
 clean :
-	-rm imp* der* s-*
+	-rm f-* s-*
 
-# no symlinks
+# dependency chaing with no symlinks
 
-der1a : imp1
-	touch der1a
+f-a1 :
+	touch f-a1
 
-der2a : imp2
-	touch der2a
+f-a2 : f-a1
+	touch f-a2
+
+f-a3 : f-a2
+	touch f-a3
 
 # symlinks
 
-# doesn't work if the file der1a does not exist
-der1b : s-der1a
-	touch der1b
+f-b1 :
+	touch f-b1
 
-# works if we reference the actual file not the symlink
-der2b : der2a
-	touch der2b
+f-b2 : f-b1
+	touch f-b2
+
+f-b3 : s-b2
+	touch f-b3

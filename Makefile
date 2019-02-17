@@ -12,7 +12,7 @@ init : clean
 clean :
 	-rm f-* s-*
 
-# dependency chaing with no symlinks
+# dependency chain with no symlinks
 
 f-a1 :
 	touch f-a1

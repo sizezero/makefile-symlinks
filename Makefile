@@ -3,10 +3,11 @@
 # der represents derived datasets
 # s- represents symlinks of various derived and imported datasets
 
-all : f-a3 f-b3
+all : f-a3 f-b3 f-c3
 
 init : clean
 	ln -s -f f-b2 s-b2
+	ln -s -f f-c2 s-c2
 
 clean :
 	-rm f-* s-*
@@ -32,3 +33,15 @@ f-b2 : f-b1
 
 f-b3 : s-b2
 	touch f-b3
+
+# use realpath to traverse symlinks
+
+f-c1 :
+	touch f-c1
+
+f-c2 : f-c1
+	touch f-c2
+
+f-c3 : $(shell realpath --relative-to=. s-c2)
+	touch f-c3
+

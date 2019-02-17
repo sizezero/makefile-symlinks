@@ -73,3 +73,5 @@ make: 'f-b3' is up to date.
 ...but it doesn't really work The above shows that that later rule is
 not linked to the earliere rules. Updating an ancestor does not fire
 the final rule and make the final target rebuild.
+
+[A response from stackoverflow](https://stackoverflow.com/questions/54726272/can-gnu-make-be-made-to-follow-symlinks-in-rules) suggested using `realpath`. This works and is demonstrated via `make f-c3` It may break down if you have an exceptionally large number of dependencies since every run of the makefile causes a process to be run for every dependency that requires `realpath`.

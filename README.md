@@ -71,7 +71,23 @@ make: 'f-b3' is up to date.
 ```
 
 ...but it doesn't really work The above shows that that later rule is
-not linked to the earliere rules. Updating an ancestor does not fire
+not linked to the earlier rules. Updating an ancestor does not fire
 the final rule and make the final target rebuild.
 
-[A response from stackoverflow](https://stackoverflow.com/questions/54726272/can-gnu-make-be-made-to-follow-symlinks-in-rules) suggested using `realpath`. This works and is demonstrated via `make f-c3` It may break down if you have an exceptionally large number of dependencies since every run of the makefile causes a process to be run for every dependency that requires `realpath`.
+[A response from
+stackoverflow](https://stackoverflow.com/questions/54726272/can-gnu-make-be-made-to-follow-symlinks-in-rules)
+suggested using `($realpath ...)`
+
+The internal make version of this function `$(realpath)` does not work
+for two reasons: (1) [`$(realpath)` returns an absolute path and thus
+if a make target is specified as a relative path make will not match
+them](https://stackoverflow.com/questions/3341482/in-a-makefile-how-to-get-the-relative-path-from-one-absolute-path-to-another). (2)
+`$(realpath)` expands to the empty string when the symlink target
+doesn't exist. The workaround is to call `$(shell realpath
+--relative-to=. ...)` This results in a huge number of process spawns
+that occur before any target can be run. You would think that this
+would cause abysmal performance but, in practice, it is very fast. A
+Makefile with hundreds of these dependencies can run in less than a
+second.
+
+This works and is demonstrated via `make f-c3`
